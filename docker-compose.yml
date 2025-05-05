@@ -1,0 +1,34 @@
+version: "3.8" 
+
+services:
+  backend:
+    build:
+      context: .  # Main directory (where Dockerfile is located)
+      dockerfile: Dockerfile  # Dockerfile located here
+    ports:
+      - "3889:3889" 
+    networks:
+      - app-network
+    depends_on:
+      - postgres  # Wait for the database to be ready before starting the backend
+
+  postgres:
+    image: postgres:17  # Use the official PostgreSQL image
+    ports:
+      - "5432:5432"  # Map the PostgreSQL port to the host machine
+    networks:
+      - app-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # Persist database data in a named volume
+    environment:
+    - POSTGRES_USER=cindy
+    - POSTGRES_PASSWORD=cindyguo16
+    - POSTGRES_DB=test
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-data:  # Define the named volume for database data
+  uploads:  # Define the named volume for image uploads
